@@ -204,7 +204,23 @@ static int q_merge_two(struct list_head *first,
     return size;
 };
 /* Sort elements of queue in ascending/descending order */
-void q_sort(struct list_head *head, bool descend) {}
+void q_sort(struct list_head *head, bool descend)
+{
+    if (!head || list_empty(head) || list_is_singular(head))
+        return;
+    struct list_head *left, *right, *mid;
+    left = right = head;
+    do {
+        left = left->next;
+        right = right->prev;
+    } while (left != right && left->next != right);
+    mid = left;
+    LIST_HEAD(second);
+    list_cut_position(&second, mid, head->prev);
+    q_sort(head, descend);
+    q_sort(&second, descend);
+    q_merge_two(head, &second, descend);
+}
 
 /* Remove every node which has a node with a strictly less value anywhere to
  * the right side of it */
