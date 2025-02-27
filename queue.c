@@ -172,7 +172,9 @@ void q_reverseK(struct list_head *head, int k)
         }
     }
 }
-static int q_merge_two(struct list_head *first, struct list_head *second)
+static int q_merge_two(struct list_head *first,
+                       struct list_head *second,
+                       bool descend)
 {
     if (!first || list_empty(first) || !second || list_empty(second))
         return 0;
@@ -182,10 +184,15 @@ static int q_merge_two(struct list_head *first, struct list_head *second)
     while (!list_empty(first) && !list_empty(second)) {
         element_t *first_entry = list_first_entry(first, element_t, list);
         element_t *second_entry = list_first_entry(second, element_t, list);
-        element_t *cmp_value =
-            strcmp(first_entry->value, second_entry->value) < 0
-                ? first_entry->value
-                : second_entry->value;
+        element_t *cmp_value;
+        if (!descend)
+            cmp_value = strcmp(first_entry->value, second_entry->value) < 0
+                            ? first_entry
+                            : second_entry;
+        else
+            cmp_value = strcmp(first_entry->value, second_entry->value) > 0
+                            ? first_entry
+                            : second_entry;
         list_move_tail(&cmp_value->list, &tmp);
         size++;
     }
