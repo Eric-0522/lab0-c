@@ -285,9 +285,11 @@ int q_merge(struct list_head *head, bool descend)
     queue_contex_t *first, *second;
     first = list_first_entry(head, queue_contex_t, chain);
     second = list_first_entry(head->next, queue_contex_t, chain);
-    while (second->q) {
+    queue_contex_t *end = NULL;
+    while (second != end) {
         queue_size = q_merge_two(first->q, second->q, descend);
-        second->q = NULL;
+        if (!end)
+            end = second;
         list_move_tail(&second->chain, head);
         second = list_entry(first->chain.next, queue_contex_t, chain);
     }
