@@ -188,11 +188,11 @@ static int q_merge_two(struct list_head *first,
         element_t *second_entry = list_first_entry(second, element_t, list);
         element_t *cmp_value;
         if (!descend)
-            cmp_value = strcmp(first_entry->value, second_entry->value) < 0
+            cmp_value = strcmp(first_entry->value, second_entry->value) <= 0
                             ? first_entry
                             : second_entry;
         else
-            cmp_value = strcmp(first_entry->value, second_entry->value) > 0
+            cmp_value = strcmp(first_entry->value, second_entry->value) >= 0
                             ? first_entry
                             : second_entry;
         list_move_tail(&cmp_value->list, &tmp);
